@@ -1,11 +1,30 @@
+using FluentValidation;
+using Microsoft.EntityFrameworkCore;
+using wms_api;
+using wms_api.DTO;
+using wms_api.Repositories;
+using wms_api.Validators;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaulConnection")
+));
+
+// Register repository
+builder.Services.AddScoped<IWarehouseRepository, WarehouseRepository>();
+
+// Register validator
+builder.Services.AddScoped<IValidator<CreateWarehouseDTO>, CreateWarehouseDTOValidator>();
+
+// Register automapper profiles
+builder.Services.AddAutoMapper(typeof(Program));
 
 var app = builder.Build();
 
