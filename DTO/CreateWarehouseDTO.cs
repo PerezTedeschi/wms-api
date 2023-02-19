@@ -10,6 +10,6 @@
         public required string Zip { get; set; }
         public required float Latitude { get; set; }
         public required float Longitude { get; set; }
-        public IFormFile? File { get; set; }
+        public IFormFile File { get; set; }
     }
 }

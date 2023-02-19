@@ -14,6 +14,8 @@ namespace wms_api.Validators
 
             RuleFor(x => x)
                 .NotNull();
+            RuleFor(x => x.File)
+                .NotNull();
             RuleFor(x => x.Code)
                 .NotEmpty()
                 .MustAsync(HaveUniqueCode)
