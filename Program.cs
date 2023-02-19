@@ -26,6 +26,16 @@ builder.Services.AddScoped<IValidator<CreateWarehouseDTO>, CreateWarehouseDTOVal
 // Register automapper profiles
 builder.Services.AddAutoMapper(typeof(Program));
 
+// 
+builder.Services.AddCors(options =>
+{
+    var appUrl = builder.Configuration.GetValue<string>("AppUrl");
+    if (appUrl != null)
+        options.AddDefaultPolicy(builder =>
+            builder.WithOrigins(appUrl).AllowAnyHeader().WithExposedHeaders("Content-Disposition").AllowAnyMethod()
+        );
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -40,5 +50,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.UseCors();
 
 app.Run();

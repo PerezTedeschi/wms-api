@@ -72,7 +72,8 @@ namespace wms_api.Controllers
                 return NotFound();
             }
 
-            return File(warehouse.FileContent, warehouse.FileMimeType, warehouse.FileName);
+            Response.Headers.Add("Content-Disposition", $"attachment;filename={ warehouse.FileName}");
+            return File(warehouse.FileContent, warehouse.FileMimeType);
         }
     }
 }
