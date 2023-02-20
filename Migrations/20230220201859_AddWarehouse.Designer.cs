@@ -11,7 +11,7 @@ using wms_api;
 namespace wms_api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230219001622_AddWarehouse")]
+    [Migration("20230220201859_AddWarehouse")]
     partial class AddWarehouse
     {
         /// <inheritdoc />
@@ -41,7 +41,6 @@ namespace wms_api.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Country")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<byte[]>("FileContent")
@@ -71,7 +70,6 @@ namespace wms_api.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Zip")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");

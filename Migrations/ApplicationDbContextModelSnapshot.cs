@@ -38,7 +38,6 @@ namespace wms_api.Migrations
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Country")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<byte[]>("FileContent")
@@ -68,7 +67,6 @@ namespace wms_api.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Zip")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");

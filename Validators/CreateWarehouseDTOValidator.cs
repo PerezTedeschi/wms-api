@@ -25,11 +25,7 @@ namespace wms_api.Validators
             RuleFor(x => x.Address)
                 .NotEmpty();
             RuleFor(x => x.State)
-                .NotEmpty();
-            RuleFor(x => x.Country)
-                .NotEmpty();
-            RuleFor(x => x.Zip)
-                .NotEmpty();            
+                .NotEmpty();         
         }
 
         private async Task<bool> HaveUniqueCode(string code, CancellationToken cancellation)
