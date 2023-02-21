@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using wms_api.DTO;
 using wms_api.Entities;
@@ -10,6 +12,7 @@ namespace wms_api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class WarehouseController : ControllerBase
     {
         private readonly IMapper _mapper;
