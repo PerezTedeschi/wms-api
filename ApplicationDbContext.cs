@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics.CodeAnalysis;
 using wms_api.Entities;
 
 namespace wms_api
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : IdentityDbContext
     {
         public ApplicationDbContext([NotNull] DbContextOptions options): base(options)
         {
@@ -16,6 +17,8 @@ namespace wms_api
         {
             modelBuilder.Entity<Warehouse>()
                 .HasAlternateKey(u => u.Code);
+
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

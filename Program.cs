@@ -1,5 +1,9 @@
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using wms_api;
 using wms_api.DTO;
 using wms_api.Repositories;
@@ -26,7 +30,7 @@ builder.Services.AddScoped<IValidator<CreateWarehouseDTO>, CreateWarehouseDTOVal
 // Register automapper profiles
 builder.Services.AddAutoMapper(typeof(Program));
 
-// 
+// Add cors
 builder.Services.AddCors(options =>
 {
     var appUrl = builder.Configuration.GetValue<string>("AppUrl");
@@ -35,6 +39,28 @@ builder.Services.AddCors(options =>
             builder.WithOrigins(appUrl).AllowAnyHeader().WithExposedHeaders("Content-Disposition").AllowAnyMethod()
         );
 });
+
+// Add Identity
+builder.Services.AddIdentity<IdentityUser, IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(option =>
+    {
+        var keyJwt = builder.Configuration.GetValue<string>("KeyJwt");
+        if (keyJwt != null)
+            option.TokenValidationParameters = new TokenValidationParameters
+            {
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ValidateLifetime = true,
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(
+                    Encoding.UTF8.GetBytes(keyJwt)),
+                ClockSkew = TimeSpan.Zero
+            };
+    });
 
 var app = builder.Build();
 
