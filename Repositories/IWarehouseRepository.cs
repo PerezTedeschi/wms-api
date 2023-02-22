@@ -6,6 +6,7 @@ namespace wms_api.Repositories
     public interface IWarehouseRepository
     {
         Task<Warehouse?> GetById(int id);
+        Task<Warehouse[]> GetClosestsByCoordinates(double lat, double lon);
         Task<IEnumerable<Warehouse>> Find(Expression<Func<Warehouse, bool>>? predicate = null);
         Task Add(Warehouse warehouse);
         Task Delete(Warehouse warehouse);

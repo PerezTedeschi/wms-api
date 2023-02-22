@@ -34,7 +34,9 @@ namespace wms_api.Controllers
 
             if (result.Succeeded)
             {
-                return JwtHelper.BuildToken(userCredentialsDTO, keyJwt);
+                var claims = await _userManager.GetClaimsAsync(user);
+
+                return JwtHelper.BuildToken(userCredentialsDTO, claims, keyJwt);
             }
 
             return BadRequest(result);
@@ -53,7 +55,10 @@ namespace wms_api.Controllers
 
             if (result.Succeeded)
             {
-                return JwtHelper.BuildToken(userCredentialsDTO, keyJwt);
+                var user = await _userManager.FindByNameAsync(userCredentialsDTO.Email);
+                var claims = await _userManager.GetClaimsAsync(user!);
+
+                return JwtHelper.BuildToken(userCredentialsDTO, claims, keyJwt);
             }
 
             return BadRequest("The username or password is incorrect");

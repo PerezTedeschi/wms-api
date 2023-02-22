@@ -8,12 +8,9 @@ namespace wms_api.Helpers
 {
     public class JwtHelper
     {
-        public static AuthenticationResponseDTO BuildToken(UserCredentialsDTO userCredentialsDTO, string jwtKey)
+        public static AuthenticationResponseDTO BuildToken(UserCredentialsDTO userCredentialsDTO, IList<Claim> claims, string jwtKey)
         {
-            var claims = new List<Claim>()
-            {
-                new Claim("email", userCredentialsDTO.Email)
-            };
+            claims.Add(new Claim("email", userCredentialsDTO.Email));
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

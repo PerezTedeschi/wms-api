@@ -1,8 +1,10 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 using System.Text;
 using wms_api;
 using wms_api.DTO;
@@ -18,7 +20,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaulConnection")
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")
 ));
 
 // Register repository
@@ -29,16 +31,6 @@ builder.Services.AddScoped<IValidator<CreateWarehouseDTO>, CreateWarehouseDTOVal
 
 // Register automapper profiles
 builder.Services.AddAutoMapper(typeof(Program));
-
-// Add cors
-builder.Services.AddCors(options =>
-{
-    var appUrl = builder.Configuration.GetValue<string>("AppUrl");
-    if (appUrl != null)
-        options.AddDefaultPolicy(builder =>
-            builder.WithOrigins(appUrl).AllowAnyHeader().WithExposedHeaders("Content-Disposition").AllowAnyMethod()
-        );
-});
 
 // Add Identity
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
@@ -62,6 +54,22 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             };
     });
 
+// Add Role policy
+builder.Services.AddAuthorization(options =>
+    {
+        options.AddPolicy("IsManager", policy => policy.RequireClaim(ClaimTypes.Role, "manager"));
+    });
+
+// Add cors
+builder.Services.AddCors(options =>
+{
+    var appUrl = builder.Configuration.GetValue<string>("AppUrl");
+    if (appUrl != null)
+        options.AddDefaultPolicy(builder =>
+            builder.WithOrigins(appUrl).AllowAnyHeader().WithExposedHeaders("Content-Disposition").AllowAnyMethod()
+        );
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -73,10 +81,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseCors();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
-app.UseCors();
 
 app.Run();

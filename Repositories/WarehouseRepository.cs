@@ -18,6 +18,23 @@ namespace wms_api.Repositories
             return await Context.Warehouses.FindAsync(id);
         }
 
+        public async Task<Warehouse[]> GetClosestsByCoordinates(double lat, double lon)
+        {            
+            var query = $@"
+                SELECT TOP 3 *,
+                    (6371 * 2 * ASIN(
+                        SQRT(
+                            POWER(SIN((RADIANS({lat}) - RADIANS(Latitude)) / 2), 2) +
+                            COS(RADIANS({lat})) * COS(RADIANS(Latitude)) *
+                            POWER(SIN((RADIANS({lon}) - RADIANS(Longitude)) / 2), 2)
+                        )
+                    )) AS Distance
+                FROM Warehouses
+                ORDER BY Distance";
+
+            return await Context.Warehouses.FromSqlRaw(query).ToArrayAsync();
+        }
+
         public async Task<IEnumerable<Warehouse>> Find(Expression<Func<Warehouse, bool>>? predicate = null)
         {
             if (predicate == null)

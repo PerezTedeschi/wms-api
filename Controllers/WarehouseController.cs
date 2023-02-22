@@ -12,7 +12,6 @@ namespace wms_api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     public class WarehouseController : ControllerBase
     {
         private readonly IMapper _mapper;
@@ -35,7 +34,7 @@ namespace wms_api.Controllers
         }
 
         [HttpPost]
-        [RequestSizeLimit(10485760)]
+        [RequestSizeLimit(1024 * 1024 * 10)]
         public async Task<ActionResult> Create([FromForm] CreateWarehouseDTO warehouseDTO)
         {
             var result = await _validator.ValidateAsync(warehouseDTO);
@@ -75,8 +74,17 @@ namespace wms_api.Controllers
                 return NotFound();
             }
 
-            Response.Headers.Add("Content-Disposition", $"attachment;filename={ warehouse.FileName}");
+            Response.Headers.Add("Content-Disposition", $"attachment;filename={warehouse.FileName}");
             return File(warehouse.FileContent, warehouse.FileMimeType);
+        }
+
+        [HttpGet("find-closest/{lat}/{lon}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme, Policy = "IsManager")]
+        public async Task<ActionResult> FindClosest(float lat, float lon)
+        {
+            var warehouses = await _repository.GetClosestsByCoordinates(lat, lon);
+
+            return Ok(warehouses.Select(_mapper.Map<GetWarehouseDTO>));
         }
     }
 }
