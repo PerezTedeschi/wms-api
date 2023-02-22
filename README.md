@@ -7,8 +7,8 @@ This is a .NET Web API project for a warehouse management system that includes g
 - Find the closest warehouses: manager users can access a functionality to display the three closest warehouses to a given address.
 
 # Installation
-Clone the repository to your local machine.
-Open the solution file wms-api.sln in Visual Studio.
-Build the solution to restore dependencies and compile the project.
-Run `Update-Database` from Package Manager Console (A SQL daatabse connection string is needed. See appsettings.json).
-Run the project locally.
+1. Clone the repository to your local machine.
+2. Open the solution file wms-api.sln in Visual Studio.
+3. Build the solution to restore dependencies and compile the project.
+4. Run `Update-Database` from Package Manager Console (A SQL daatabse connection string is needed. See appsettings.json).
+5. Run the project locally.
