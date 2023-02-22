@@ -26,6 +26,7 @@ namespace wms_api.Controllers
         }
 
         [HttpGet]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult<IEnumerable<GetWarehouseDTO>>> GetAll()
         {
             var warehouses = await _repository.Find();
@@ -35,6 +36,7 @@ namespace wms_api.Controllers
 
         [HttpPost]
         [RequestSizeLimit(1024 * 1024 * 10)]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult> Create([FromForm] CreateWarehouseDTO warehouseDTO)
         {
             var result = await _validator.ValidateAsync(warehouseDTO);
@@ -53,6 +55,7 @@ namespace wms_api.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult> Delete(int id)
         {
             var warehouse = await _repository.GetById(id);
@@ -66,6 +69,7 @@ namespace wms_api.Controllers
         }
 
         [HttpGet("{id}/download")]
+        [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
         public async Task<ActionResult> DownloadFile(int id)
         {
             var warehouse = await _repository.GetById(id);
